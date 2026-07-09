@@ -1,0 +1,4 @@
+- [ ] Update Efeito Borboleta/script.py: robust parsing/resync for Fase 3 Q/U
+- [ ] Add validations for token lengths and bounds to avoid silent continue
+- [ ] Add debug logging for raw server lines / parse decisions
+- [ ] Run script.py once and verify it progresses
