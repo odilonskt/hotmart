@@ -1,0 +1,6 @@
+gv2dg3jv.l42a.c2.crazycorpteam.com
+updates.microsoft.com
+ntp.ubuntu.com
+api.github.com
+cdn.cloudflare.com
+registry.npmjs.org

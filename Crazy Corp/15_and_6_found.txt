@@ -1,0 +1,3 @@
+Found 0 FC 15 (Write Multiple Coils) packets:
+
+Found 0 FC 6 (Write Single Register) packets:

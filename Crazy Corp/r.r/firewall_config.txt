@@ -1,0 +1,252 @@
+# NebulaCorp Firewall Configuration
+# Device: Palo Alto PA-3220
+# Last Modified: 2024-11-10T14:30:00Z
+# Config Export: Partial (Security Policies Only)
+
+# ============================================================================
+# SECURITY POLICY RULES
+# ============================================================================
+
+# --- INBOUND RULES ---
+
+rule 100 {
+    name: "Allow-External-Web"
+    source-zone: untrust
+    destination-zone: dmz
+    source-address: any
+    destination-address: web-servers
+    service: [http, https]
+    action: allow
+    log-start: yes
+    log-end: yes
+}
+
+rule 110 {
+    name: "Allow-External-Mail"
+    source-zone: untrust
+    destination-zone: dmz
+    source-address: any
+    destination-address: mail-servers
+    service: [smtp, smtps, imaps]
+    action: allow
+    log-start: yes
+    log-end: yes
+}
+
+rule 120 {
+    name: "Allow-VPN"
+    source-zone: untrust
+    destination-zone: trust
+    source-address: any
+    destination-address: vpn-gateway
+    service: [ipsec-esp, ike]
+    action: allow
+    log-start: yes
+    log-end: yes
+}
+
+# --- INTERNAL RULES ---
+
+rule 200 {
+    name: "Trust-to-DMZ-Web"
+    source-zone: trust
+    destination-zone: dmz
+    source-address: internal-workstations
+    destination-address: web-servers
+    service: [http, https]
+    action: allow
+    log-end: yes
+}
+
+rule 210 {
+    name: "Trust-DNS-Internal"
+    source-zone: trust
+    destination-zone: trust
+    source-address: any
+    destination-address: dns-servers
+    service: dns
+    action: allow
+    log-end: no
+}
+
+rule 220 {
+    name: "Trust-DNS-External"
+    source-zone: trust
+    destination-zone: untrust
+    source-address: dns-servers
+    destination-address: any
+    service: dns
+    action: allow
+    log-end: yes
+    # NOTE: Direct DNS from workstations blocked - must use internal DNS
+}
+
+rule 230 {
+    name: "Trust-to-FileServers"
+    source-zone: trust
+    destination-zone: trust
+    source-address: internal-workstations
+    destination-address: file-servers
+    service: [smb, netbios-ssn]
+    action: allow
+    log-end: no
+}
+
+rule 240 {
+    name: "Trust-to-SCADA"
+    source-zone: trust
+    destination-zone: ics
+    source-address: scada-operators
+    destination-address: plc-controllers
+    service: modbus-tcp
+    action: allow
+    log-start: yes
+    log-end: yes
+    # CRITICAL: Only authorized operators
+}
+
+# --- OUTBOUND RULES ---
+
+rule 300 {
+    name: "Allow-Web-Outbound"
+    source-zone: trust
+    destination-zone: untrust
+    source-address: internal-workstations
+    destination-address: any
+    service: [http, https]
+    action: allow
+    log-end: yes
+}
+
+rule 310 {
+    name: "Block-Direct-DNS-Outbound"
+    source-zone: trust
+    destination-zone: untrust
+    source-address: internal-workstations
+    destination-address: any
+    service: dns
+    action: deny
+    log-start: yes
+    log-end: yes
+    # NOTE: Workstations should use internal DNS only
+    # ISSUE: Rule not applied to all subnets - see ticket FIRE-2024-0892
+}
+
+rule 320 {
+    name: "Allow-ICMP-Limited"
+    source-zone: trust
+    destination-zone: untrust
+    source-address: internal-workstations
+    destination-address: any
+    service: icmp
+    action: allow
+    log-end: no
+    # TODO: Consider blocking ICMP to external - low priority
+    # WARNING: This rule may allow covert channels
+}
+
+rule 330 {
+    name: "Block-SMB-Outbound"
+    source-zone: trust
+    destination-zone: untrust
+    source-address: any
+    destination-address: any
+    service: [smb, netbios-ssn]
+    action: deny
+    log-start: yes
+    log-end: yes
+    # ISSUE: Rule positioned incorrectly - packets may bypass
+    # See incident INC-2024-QE-7742
+}
+
+# --- DEFAULT RULES ---
+
+rule 900 {
+    name: "Deny-All-Other"
+    source-zone: any
+    destination-zone: any
+    source-address: any
+    destination-address: any
+    service: any
+    action: deny
+    log-start: yes
+    log-end: yes
+}
+
+# ============================================================================
+# SERVICE DEFINITIONS
+# ============================================================================
+
+service "modbus-tcp" {
+    protocol: tcp
+    port: 502
+}
+
+service "smb" {
+    protocol: tcp
+    port: 445
+}
+
+service "netbios-ssn" {
+    protocol: tcp
+    port: 139
+}
+
+# ============================================================================
+# ADDRESS OBJECTS
+# ============================================================================
+
+address "dns-servers" {
+    ip: 192.168.50.2/32
+}
+
+address "file-servers" {
+    ip: 192.168.50.15/32
+}
+
+address "plc-controllers" {
+    ip: 192.168.50.200/32
+}
+
+address "internal-workstations" {
+    ip: 192.168.50.0/24
+}
+
+address "scada-operators" {
+    ip: [192.168.50.10/32, 192.168.50.101/32]
+    # NOTE: 192.168.50.101 was added last month - verify authorization
+}
+
+# ============================================================================
+# KNOWN ISSUES / TICKETS
+# ============================================================================
+#
+# FIRE-2024-0892: DNS blocking rule not applied to 192.168.50.0/24 subnet
+#   Status: Open
+#   Priority: Medium
+#   Impact: Workstations can reach external DNS directly
+#   ETA: Next maintenance window (2024-11-20)
+#
+# FIRE-2024-0901: SMB outbound block rule ordering issue
+#   Status: Open
+#   Priority: High
+#   Impact: Some SMB traffic may reach external networks
+#   ETA: Emergency change pending approval
+#
+# FIRE-2024-0915: ICMP to external not logged
+#   Status: Investigating
+#   Priority: Low
+#   Impact: Potential blind spot for covert channels
+#   ETA: TBD
+#
+# ============================================================================
+# CHANGE LOG (Last 30 Days)
+# ============================================================================
+#
+# 2024-11-10: Added 192.168.50.101 to scada-operators group (REQ-44521)
+# 2024-11-05: Updated web-servers address group for new CDN
+# 2024-10-28: Modified rule 320 - allowed ICMP for network troubleshooting
+# 2024-10-20: Created modbus-tcp service definition
+# 2024-10-15: Initial deployment of ICS zone rules
+#
+# ============================================================================

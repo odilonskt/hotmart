@@ -1,0 +1,97 @@
+# NebulaCorp System Event Log
+# Server: NCORP-WKS-101 (192.168.50.101)
+# Export Date: 2024-11-15T10:30:00Z
+# Log Period: 2024-11-15T08:00:00Z to 2024-11-15T10:00:00Z
+
+2024-11-15T08:00:01.234Z INFO  [kernel] System boot completed successfully
+2024-11-15T08:00:02.456Z INFO  [systemd] Started Network Manager
+2024-11-15T08:00:03.789Z INFO  [sshd] Server listening on 0.0.0.0 port 22
+2024-11-15T08:00:05.012Z INFO  [NetworkManager] Ethernet device 'eth0' activated
+2024-11-15T08:00:05.345Z INFO  [dhclient] DHCPACK from 192.168.50.1
+2024-11-15T08:00:05.678Z INFO  [NetworkManager] Address: 192.168.50.101/24
+2024-11-15T08:00:10.123Z INFO  [cron] Started scheduled task runner
+2024-11-15T08:01:00.000Z INFO  [cron] Running daily maintenance tasks
+2024-11-15T08:15:23.456Z INFO  [login] User 'jsmith' logged in via console
+2024-11-15T08:15:30.789Z INFO  [gnome-session] Session started for user jsmith
+2024-11-15T08:30:00.123Z INFO  [outlook] Email client started
+2024-11-15T08:35:15.456Z INFO  [firefox] Browser launched, profile: default
+2024-11-15T08:42:00.789Z WARN  [firefox] Certificate warning for: telemetry-update.nebulacorp.local
+2024-11-15T08:42:01.012Z INFO  [firefox] User accepted certificate exception
+2024-11-15T08:45:00.345Z INFO  [smbd] Connection from 192.168.50.15
+2024-11-15T08:45:01.678Z INFO  [smbd] Mounted share: \\NCORP-FS01\shared
+2024-11-15T08:47:33.901Z WARN  [antivirus] Heuristic detection: Suspicious PowerShell activity
+2024-11-15T08:47:34.234Z INFO  [antivirus] File quarantine skipped (user exception)
+2024-11-15T08:47:35.567Z ERROR [powershell] Execution policy bypass detected
+2024-11-15T08:47:36.890Z WARN  [defender] AMSI bypass technique detected - Event ID 4104
+2024-11-15T08:47:37.123Z INFO  [powershell] Script executed: C:\Users\jsmith\AppData\Local\Temp\update_helper.ps1
+2024-11-15T08:47:38.456Z INFO  [task_scheduler] New scheduled task created: "System Health Check"
+2024-11-15T08:47:39.789Z WARN  [firewall] Outbound connection to 203.0.113.42:443 (new destination)
+2024-11-15T08:47:40.012Z INFO  [firewall] Connection allowed (default rule)
+2024-11-15T08:48:00.345Z INFO  [dns-client] Query: update-service.shadow-cdn.net -> 198.51.100.53
+2024-11-15T08:48:00.678Z WARN  [dns-client] Non-standard DNS server used
+2024-11-15T08:50:15.901Z INFO  [svchost] Windows Update service checking for updates
+2024-11-15T08:55:00.234Z INFO  [outlook] Received email from: security@nebulacorp.com
+2024-11-15T09:00:00.567Z INFO  [cron] Hourly task: System resource collection
+2024-11-15T09:05:23.890Z ERROR [event_log] Event ID 4688: New process created
+2024-11-15T09:05:23.891Z INFO  [event_log] Process: cmd.exe, Parent: powershell.exe
+2024-11-15T09:05:24.123Z WARN  [edr] Suspicious process chain detected
+2024-11-15T09:05:25.456Z INFO  [cmd.exe] Executed: netstat -an | findstr ESTABLISHED
+2024-11-15T09:08:42.789Z ERROR [kernel] ICMP redirect received (possible MITM)
+2024-11-15T09:08:43.012Z WARN  [network] Unusual ICMP traffic pattern detected
+2024-11-15T09:08:44.345Z INFO  [firewall] ICMP type 8 to 203.0.113.42 (multiple packets)
+2024-11-15T09:10:00.678Z INFO  [smbd] File accessed: \\NCORP-FS01\shared\quarterly_report.docx
+2024-11-15T09:15:00.901Z WARN  [audit] Large file copy operation initiated
+2024-11-15T09:15:01.234Z INFO  [smbd] File created: system_backup_quantum.dat (size: 1.2MB)
+2024-11-15T09:15:02.567Z ERROR [audit] SMB connection to external IP: 203.0.113.42 (BLOCKED destinations list miss)
+2024-11-15T09:15:03.890Z WARN  [dlp] Potential data exfiltration detected
+2024-11-15T09:15:04.123Z INFO  [dlp] Alert sent to SOC team
+2024-11-15T09:20:00.456Z INFO  [modbus_monitor] Connection to PLC: 192.168.50.200
+2024-11-15T09:20:01.789Z WARN  [modbus_monitor] Unusual register write sequence (FC 06)
+2024-11-15T09:20:02.012Z INFO  [modbus_monitor] Registers modified: 100-111, 200-201
+2024-11-15T09:25:00.345Z WARN  [http_proxy] HTTP 418 response from internal server (unusual)
+2024-11-15T09:25:01.678Z INFO  [http_proxy] Request to: teapot.nebulacorp.local (BREW /coffee)
+2024-11-15T09:30:00.901Z INFO  [task_scheduler] Running: "System Health Check" (scheduled task)
+2024-11-15T09:30:01.234Z WARN  [edr] Scheduled task executing suspicious binary
+2024-11-15T09:30:02.567Z INFO  [event_log] Network connection: 198.51.100.53:53 (DNS)
+2024-11-15T09:30:03.890Z ERROR [dns-client] TXT query to non-standard server detected
+2024-11-15T09:35:00.123Z INFO  [soc_alert] Correlation rule triggered: Multi-protocol exfiltration
+2024-11-15T09:35:01.456Z WARN  [soc_alert] Indicators matched: DNS tunneling, ICMP covert channel
+2024-11-15T09:35:02.789Z INFO  [soc_alert] Case created: INC-2024-QE-7742
+2024-11-15T09:40:00.012Z INFO  [ir_team] Incident response initiated
+2024-11-15T09:40:01.345Z INFO  [ir_team] Network capture started on eth0
+2024-11-15T09:45:00.678Z INFO  [ir_team] Workstation isolated from network
+2024-11-15T10:00:00.901Z INFO  [ir_team] PCAP export completed: crazycorp.pcap
+
+# ========== ANALYST NOTES ==========
+# 
+# Key timestamps for investigation:
+#   08:47:33 - Initial compromise indicator (AV heuristic)
+#   08:47:39 - First C2 connection (203.0.113.42)
+#   08:48:00 - DNS exfil begins (198.51.100.53)
+#   09:08:42 - ICMP tunnel activity
+#   09:15:02 - SMB to external (data exfil confirmed)
+#   09:20:01 - Modbus manipulation (ICS involvement)
+#
+# Suspicious IPs:
+#   203.0.113.42 - C2 Server
+#   198.51.100.53 - Rogue DNS
+#
+# TTPs observed:
+#   - PowerShell execution policy bypass
+#   - Scheduled task persistence
+#   - DNS tunneling
+#   - ICMP covert channel
+#   - Protocol abuse (SMB, Modbus)
+#
+# The number sequence 8742155 appears multiple times:
+#   - Port 8742 used for SMB exfil
+#   - Modbus registers 200-201 contain 8742, 155
+#   - ICMP TTL pattern: 87, 42, 155
+#
+# Encoding methods detected:
+#   - Base64 (DNS TXT)
+#   - XOR 0x42 (ICMP)
+#   - Hex (HTTP headers)
+#   - Plaintext (SMB file)
+#
+# ========== END OF LOG ==========
